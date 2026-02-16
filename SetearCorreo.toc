@@ -1,0 +1,9 @@
+## Interface: 120001
+## Title: SetearCorreo
+## Author: Uncutulin
+## Version: 2.0.0 
+## IconTexture: Interface\AddOns\SetearCorreo\icon.tga
+
+Logic.lua
+UI.lua
+SetearCorreo.lua
