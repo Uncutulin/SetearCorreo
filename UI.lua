@@ -4,7 +4,7 @@ ns.UI = {}
 function ns.CreateMainPanel()
     -- Integración como PANEL LATERAL (Restaurando Autocompletado OFICIAL)
     local frame = CreateFrame("Frame", "MiAddonFrame", UIParent, "BasicFrameTemplateWithInset")
-    frame:SetSize(170, 260)
+    frame:SetSize(170, 290)
     frame:Hide()
     ns.UI.frame = frame
     
@@ -20,7 +20,7 @@ function ns.CreateMainPanel()
     -- 1. SLOT PARA ITEM (Arriba del todo) - MÁS GRANDE
     local itemSlot = CreateFrame("Button", "MiAddonItemSlot", frame)
     itemSlot:SetPoint("TOP", frame, "TOP", 0, -35)
-    itemSlot:SetSize(60, 60) 
+    itemSlot:SetSize(92, 92) 
     ns.UI.itemSlot = itemSlot
     
     -- Añadir fondo/borde básico
@@ -30,7 +30,7 @@ function ns.CreateMainPanel()
     
     -- Añadir textura para el ICONO DEL ITEM
     itemSlot.icon = itemSlot:CreateTexture(nil, "ARTWORK")
-    itemSlot.icon:SetSize(52, 52) 
+    itemSlot.icon:SetSize(60, 60) 
     itemSlot.icon:SetPoint("CENTER")
     itemSlot.icon:SetTexture(nil) 
     
@@ -58,10 +58,14 @@ function ns.CreateMainPanel()
     input:SetMaxLetters(50)
     ns.input = input -- Guardamos referencia para Logic.lua
     
-    -- Botón LIMPIAR
-    local clearButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
-    clearButton:SetSize(22, 22)
-    clearButton:SetPoint("LEFT", input, "RIGHT", 2, 0)
+    -- Botón LIMPIAR (Escoba)
+    local clearButton = CreateFrame("Button", nil, frame)
+    clearButton:SetSize(20, 20)
+    clearButton:SetPoint("LEFT", input, "RIGHT", 5, 0)
+    clearButton:SetNormalTexture(655994)
+    clearButton:SetHighlightTexture("Interface\\Buttons\\ButtonHilight-Square")
+    clearButton:SetPushedTexture(655994)
+    clearButton:GetPushedTexture():SetVertexColor(0.8, 0.8, 0.8) -- Darken when pushed-1)
     clearButton:SetScript("OnClick", function()
         ns.LimpiarDatos()
     end)
@@ -143,19 +147,19 @@ function ns.CreateToggleButton()
      if ns.UI.toggleButton then return end
 
      local toggleBtn = CreateFrame("Button", "MiAddonToggleBtn", SendMailFrame, "UIPanelButtonTemplate")
-     toggleBtn:SetSize(25, 20)
-     toggleBtn:SetPoint("TOPRIGHT", SendMailFrame, "TOPRIGHT", -90, 0) 
+     toggleBtn:SetSize(50, 20)
+     toggleBtn:SetPoint("TOPRIGHT", SendMailFrame, "TOPRIGHT", 10, 0) 
      toggleBtn:SetFrameStrata("DIALOG") 
      toggleBtn:SetFrameLevel(900)
      
-     toggleBtn:SetText("<<") 
+     toggleBtn:SetText("ST <<") 
      toggleBtn:SetScript("OnClick", function(btn)
          if ns.UI.frame:IsShown() then
              ns.UI.frame:Hide()
-             btn:SetText(">>") 
+             btn:SetText("ST >>") 
          else
              ns.UI.frame:Show()
-             btn:SetText("<<")
+             btn:SetText("ST <<")
          end
      end)
      toggleBtn:Show()

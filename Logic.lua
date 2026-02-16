@@ -10,38 +10,27 @@ function ns.EnviarObjetosAlCorreo()
         return
     end
 
-    local ranurasAdjunto = {}
-    for i = 1, ATTACHMENTS_MAX_SEND do
-        local ranura = _G["SendMailAttachment" .. i]
-        if ranura then
-            table.insert(ranurasAdjunto, ranura)
-        end
-    end
+    local itemsAttached = 0
+    -- ATTACHMENTS_MAX_SEND usually is 12
+    local maxAttachments = ATTACHMENTS_MAX_SEND or 12
 
-    if #ranurasAdjunto <= 0 then return end
-
-    local ranuraAdjuntoIndex = 1
-
-    for bagID = 0, 4 do
+    for bagID = 0, 5 do
         local numSlots = C_Container.GetContainerNumSlots(bagID)
         for slotID = 1, numSlots do
-            if ranuraAdjuntoIndex > #ranurasAdjunto then
-                return -- Todas las ranuras de adjunto están llenas
+            if itemsAttached >= maxAttachments then
+                return -- Ya hemos llenado los huecos permitidos
             end
             
             local containerInfo = C_Container.GetContainerItemInfo(bagID, slotID)
-            -- Comprobamos si hay Info, si NO está bloqueado (ya enviado/usado) y si es el ID correcto
+            
+            -- Verificamos que el item sea el seleccionado y no esté bloqueado
             if containerInfo and not containerInfo.isLocked and containerInfo.itemID == ns.selectedItemID then
-                local ranura = ranurasAdjunto[ranuraAdjuntoIndex]
-                if ranura then
-                    -- Simular clic en el objeto en la bolsa
-                    C_Container.PickupContainerItem(bagID, slotID)
-
-                    -- Simular clic en la ranura de adjunto
-                    ranura:Click()
-
-                    ranuraAdjuntoIndex = ranuraAdjuntoIndex + 1
-                end
+                
+                -- UseContainerItem pone el objeto en el correo si la ventana de correo está abierta
+                -- Esto maneja automáticamente los stacks y es más seguro que Pickup+Click
+                C_Container.UseContainerItem(bagID, slotID)
+                
+                itemsAttached = itemsAttached + 1
             end
         end
     end
@@ -67,8 +56,8 @@ function ns.LimpiarDatos()
     if ns.input then ns.input:SetText("") end
     
     ns.selectedItemID = nil
-    if ns.itemSlot and ns.itemSlot.icon then
-        ns.itemSlot.icon:SetTexture(nil)
+    if ns.UI.itemSlot and ns.UI.itemSlot.icon then
+        ns.UI.itemSlot.icon:SetTexture(nil)
     end
     
     print("|cffffff00SetearCorreo:|r Datos limpiados.")
